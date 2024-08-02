@@ -39,6 +39,11 @@ let page = 1;
   // Create scroll observer
   const scrollObserver = document.createElement("div");
   scrollObserver.id = "scroll-observer";
+  /**
+   * Add height so the user
+   * can scroll it into view
+   */
+  scrollObserver.style.height = '2px';
   container.appendChild(scrollObserver);
 
   // console.log(observer.observe(scrollObserver));
@@ -57,6 +62,10 @@ let page = 1;
   });
   
   async function searchImages() {
+    /**
+     * Do not reset the form as when you scroll down,
+     * it will be accessed again
+     */
     inputData = searchInputEl.value;
     const url = `https://api.unsplash.com/search/photos?page=${page}&query=${inputData}&per_page=12&client_id=${accessKey}`; // Tạo URL yêu cầu API
     if(!inputData){
@@ -101,17 +110,19 @@ let page = 1;
   formInput.addEventListener("submit", (event) => {
     event.preventDefault(); 
     page = 1;
-    if (!searchInputEl.value || searchInputEl.value.trim() === "") {
-      // no add null value && spacing value
-      alert("Please enter in the form !!!!");
-      form.reset(); // reset form then submit
+    if (searchInputEl.value.trim() === '') {
+      // Empty or only space string are still empty after trimmed
+      alert('Please enter in the form !!!!');
       return;
     }
+
+    /**
+     * Do not reset the form as when you scroll down,
+     * it will be accessed again
+     */
     console.log('Searching');
-    // searchResultsEl.innerHTML = ""; 
     searchResultsEl.replaceChildren();
     searchImages();
-    formInput.reset();
   });
 
   observer.observe(scrollObserver);
